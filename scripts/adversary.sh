@@ -31,6 +31,12 @@ done
 case "$mode" in critic|rebuttal) ;; *) echo "adversary: mode must be critic or rebuttal" >&2; exit 2 ;; esac
 
 base_url="${ADVERSARY_BASE_URL:-https://api.moonshot.ai/anthropic}"
+# If the key is not in the environment (Claude Code launched from a desktop
+# launcher, say), fall back to the conventional file.
+if [ -z "${ADVERSARY_AUTH_TOKEN:-}" ] && [ -z "${MOONSHOT_API_KEY:-}" ] && [ -r "$HOME/.config/moonshot/env" ]; then
+  # shellcheck disable=SC1091
+  . "$HOME/.config/moonshot/env"
+fi
 token="${ADVERSARY_AUTH_TOKEN:-${MOONSHOT_API_KEY:-}}"
 if [ -z "$token" ]; then
   echo "adversary: no token. Set MOONSHOT_API_KEY, or ADVERSARY_AUTH_TOKEN and ADVERSARY_BASE_URL." >&2

@@ -117,6 +117,6 @@ printf '%s\n\n---\n\n%s\n' "$prompt" "$material" | env \
     --setting-sources "" \
     --tools "Read" "Glob" "Grep" "Bash" \
     --allowedTools "Read" "Glob" "Grep" "Bash(git diff:*)" "Bash(git log:*)" "Bash(git show:*)" "Bash(git blame:*)" \
-    --disallowedTools "Read(~/.config/moonshot/**)" "Read(//$HOME/.config/moonshot/**)" "Edit" "Write" "MultiEdit" "NotebookEdit" "WebFetch" "WebSearch" "Agent" "Task" \
+    --disallowedTools "Read(~/.config/moonshot/**)" "Read(//$HOME/.config/moonshot/**)" "Edit" "Write" "NotebookEdit" "WebFetch" "WebSearch" "Agent" "Task" \
   2> >(grep -vE 'connectors are disabled|context window of 200k|unrecognized_model' | redact >&2) \
   | redact

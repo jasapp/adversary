@@ -15,7 +15,8 @@ short brief about what the change is meant to do, and pipes both to
 `scripts/adversary.sh`. That script starts a nested, read-only Claude Code
 session pointed at the other provider. The critic can read your repo and run
 `git diff`, `git log`, `git show`, and `git blame`. It cannot edit, run tests,
-or touch the network.
+or touch the network. Your own Claude Code settings and hooks are not
+inherited by that session, and the API token is scrubbed from its output.
 
 The critic returns numbered findings with file and line citations. Claude then
 opens each one and marks it confirmed, plausible, or rejected. Anything
@@ -69,7 +70,12 @@ export ADVERSARY_FAST_MODEL=kimi-k3:cloud
 
 Whatever you review leaves your machine and goes to the provider. The script
 refuses material that looks like it contains a credential. It is a regex, not a
-guarantee. Do not point it at diffs holding customer data.
+guarantee. Do not point it at diffs holding customer data. `--dry-run` prints
+exactly what would be sent without sending it.
+
+The read-only boundary is a tool allow-list, not a sandbox. A model that
+really wanted to could write a file with `git diff --output=PATH`. This guards
+against accidents, not a hostile repo.
 
 ## Files
 
@@ -77,6 +83,7 @@ guarantee. Do not point it at diffs holding customer data.
 - `scripts/adversary.sh`: runs the nested session. Usable on its own: `git diff | scripts/adversary.sh`.
 - `prompts/critic.md`: the round-one stance.
 - `prompts/rebuttal.md`: the round-two stance.
+- `examples/`: real runs, with Kimi's output verbatim and Claude's verdicts.
 
 ## License
 
